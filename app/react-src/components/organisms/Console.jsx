@@ -18,7 +18,9 @@ limitations under the License.
 
 import React from 'react'
 import styled from 'styled-components'
+import { observer } from 'mobx-react'
 
+import ConsoleLine from '../../models/ConsoleLine'
 import StyledString from '../../utils/StyledString'
 
 const Wrapper = styled.div`
@@ -47,38 +49,36 @@ const Cursor = styled.div`
   margin: 16px 0;
   background: #6D6D6D;
 `
-class ConsoleLine {
-  text: string | StyledString
-  username: string
-  path: string
-}
 type Props = {
   lines?: ConsoleLine[],
 }
 const line1 = new ConsoleLine()
-line1.username = 'user@usersMacBookPro'
-line1.path = '~/Projects/first'
-line1.text = '2018-01-23 14:23:45.197 Electron[49929:1747795] *** WARNING: Textured window AtomNSWindow: is getting an implicitly transparent titlebar. This will break when linking against newer SDKs. Use NSWindow -titlebarAppearsTransparent=YES instead.'
-const line2 = new ConsoleLine()
-line2.username = 'user@usersMacBookPro'
-line2.path = '~/Projects/second'
-line2.text = '2018-01-23 14:23:45.197 Electron[49929:1747795] *** WARNING: Textured window AtomNSWindow: is getting an implicitly transparent titlebar. This will break when linking against newer SDKs. Use NSWindow -titlebarAppearsTransparent=YES instead.'
-const line3 = new ConsoleLine()
-const text = '[53801:0123/145436.837886:ERROR:CONSOLE(852)] [object ErrorEvent], source: chrome-devtools://devtools/bundled/inspector.js (852)'
-const styledString = new StyledString(text)
-styledString.range(25, 39, 'color: red')
-styledString.range(75, 122, 'font-style: italic; color: gray;')
-line3.text = styledString
+line1.text = 'Hey guys! Anyone care to tell me why this link doesn’t rotate from the center like the default specification states…. I’m stumped. FYI, Changing transform-origin has no effect either…. I\'m simply trying to make the x rotate 90 degrees on hover and stay centered... Thanks!'
+// const line1 = new ConsoleLine()
+// line1.username = 'user@usersMacBookPro'
+// line1.path = '~/Projects/first'
+// line1.text = '2018-01-23 14:23:45.197 Electron[49929:1747795] *** WARNING: Textured window AtomNSWindow: is getting an implicitly transparent titlebar. This will break when linking against newer SDKs. Use NSWindow -titlebarAppearsTransparent=YES instead.'
+// const line2 = new ConsoleLine()
+// line2.username = 'user@usersMacBookPro'
+// line2.path = '~/Projects/second'
+// line2.text = '2018-01-23 14:23:45.197 Electron[49929:1747795] *** WARNING: Textured window AtomNSWindow: is getting an implicitly transparent titlebar. This will break when linking against newer SDKs. Use NSWindow -titlebarAppearsTransparent=YES instead.'
+// const line3 = new ConsoleLine()
+// const text = '[53801:0123/145436.837886:ERROR:CONSOLE(852)] [object ErrorEvent], source: chrome-devtools://devtools/bundled/inspector.js (852)'
+// const styledString = new StyledString(text)
+// styledString.range(25, 39, 'color: red')
+// styledString.range(75, 122, 'font-style: italic; color: gray;')
+// line3.text = styledString
+@observer
 class Console extends React.Component<Props> {
   renderText(text: string | StyledString) {
     if (typeof text !== 'string') {
       return text.toHtml()
     }
-    return text
+    return text.replace(/(?:\r\n|\r|\n)/g, '<br />')
   }
 
   render() {
-    const lines = this.props.lines || [line1, line2, line3]
+    const lines = this.props.lines || [line1]
 
     return (
       <Wrapper>

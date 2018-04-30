@@ -16,7 +16,21 @@ limitations under the License.
 
 // @flow
 
-import './Persistence'
-import './Credentials'
-import './FileBrowser'
-import './Console'
+import { observable, action } from 'mobx'
+
+import ConsoleLine from '../models/ConsoleLine'
+import ConsoleManager from '../ipc/ConsoleManager'
+
+class ConsoleStore {
+  @observable lines: Array<ConsoleLine> = []
+
+  @action loadLines(): Promise<void> {
+    return ConsoleManager.load().then(text => {
+      this.lines = [
+        new ConsoleLine(text),
+      ]
+    })
+  }
+}
+
+export default new ConsoleStore()

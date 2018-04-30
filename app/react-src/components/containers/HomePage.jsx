@@ -194,7 +194,7 @@ class HomePage extends React.Component<{}, State> {
               />
             ) : null}
           </Wrapper>
-      )}
+        )}
       />
     )
   }

@@ -16,7 +16,16 @@ limitations under the License.
 
 // @flow
 
-import './Persistence'
-import './Credentials'
-import './FileBrowser'
-import './Console'
+import StyledString from '../utils/StyledString'
+
+export default class ConsoleLine {
+  text: string | StyledString
+  username: ?string
+  path: ?string
+
+  constructor(text?: string | StyledString, username?: string, path?: string) {
+    this.text = text || ''
+    this.username = username
+    this.path = path
+  }
+}

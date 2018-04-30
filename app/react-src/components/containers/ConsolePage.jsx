@@ -19,23 +19,45 @@ limitations under the License.
 import React from 'react'
 import styled from 'styled-components'
 import LinearProgress from 'material-ui/LinearProgress'
+import { observer } from 'mobx-react'
 
 import MainTemplate from './MainTemplate'
 import Console from '../organisms/Console'
+import ConsoleStore from '../../stores/ConsoleStore'
 
 const ProgressBarHeight = 3
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  width: 100%;
+`
 const LinearProgressStyled = styled(LinearProgress)`
   z-index: 1;
+  position: fixed !important;
 `
 
 type Props = {}
 type State = {
   progress: number,
 }
+@observer
 class ConsolePage extends React.Component<Props, State> {
   state = {
     progress: 50,
+  }
+
+  componentDidMount() {
+    ConsoleStore.loadLines().then(() => {
+      this.scrollToBottom()
+    })
+  }
+
+  bodyRef: ?HTMLElement
+
+  scrollToBottom() {
+    if (!this.bodyRef) {
+      return
+    }
+
+    this.bodyRef.scrollTop = this.bodyRef.scrollHeight
   }
 
   render() {
@@ -43,14 +65,15 @@ class ConsolePage extends React.Component<Props, State> {
       <MainTemplate
         progressBarHeight={ProgressBarHeight}
         footerState="cancel"
+        bodyRef={ref => { this.bodyRef = ref }}
         body={(
           <Wrapper>
             <LinearProgressStyled
-              style={{ height: ProgressBarHeight }}
+              style={{ height: ProgressBarHeight, position: 'fixed' }}
               mode="determinate"
               value={this.state.progress}
             />
-            <Console />
+            <Console lines={ConsoleStore.lines} />
           </Wrapper>
         )}
       />
